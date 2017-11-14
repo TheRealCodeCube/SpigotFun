@@ -1,0 +1,7 @@
+name: SpigotFunPlugin
+main: io.github.codecube.spigotfun.SpigotFunPlugin
+version: 1.0
+commands: 
+  funtest:
+    description: It does fun things to test stuff!
+    usage: /funtest [anything] [but] [these] [args] [will] [not] [make] [a] [difference]
