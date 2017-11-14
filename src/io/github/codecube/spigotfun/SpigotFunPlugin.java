@@ -7,7 +7,10 @@ public class SpigotFunPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// Register the FUNTEST command! :D SoFuN!
-		this.getCommand("funtest").setExecutor(new CommandFunTest());
+		getCommand("funtest").setExecutor(new CommandFunTest());
+
+		// Register the test event listener.
+		getServer().getPluginManager().registerEvents(new TestListener(), this);
 	}
 
 	// Called when the plugin is unloaded / disabled.
