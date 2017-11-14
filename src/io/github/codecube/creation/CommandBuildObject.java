@@ -1,4 +1,4 @@
-package io.github.codecube.creationutils;
+package io.github.codecube.creation;
 
 import java.io.File;
 

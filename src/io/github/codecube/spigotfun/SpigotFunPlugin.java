@@ -2,7 +2,7 @@ package io.github.codecube.spigotfun;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import io.github.codecube.creationutils.CommandBuildObject;
+import io.github.codecube.creation.CommandBuildObject;
 
 public class SpigotFunPlugin extends JavaPlugin {
 	// Called when the plugin is first registered.
