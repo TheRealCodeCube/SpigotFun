@@ -2,6 +2,8 @@ package io.github.codecube.spigotfun;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.github.codecube.creationutils.CommandBuildObject;
+
 public class SpigotFunPlugin extends JavaPlugin {
 	// Called when the plugin is first registered.
 	@Override
@@ -11,6 +13,10 @@ public class SpigotFunPlugin extends JavaPlugin {
 
 		// Register the test event listener.
 		getServer().getPluginManager().registerEvents(new TestListener(), this);
+
+		// Ok, now for real non-testing stuff.
+		// This command allows for creation of objects.
+		getCommand("buildobject").setExecutor(new CommandBuildObject());
 	}
 
 	// Called when the plugin is unloaded / disabled.
