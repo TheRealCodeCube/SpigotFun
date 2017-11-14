@@ -9,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import io.github.codecube.creationutils.GridWorldGenerator;
+
 public class CommandFunTest implements CommandExecutor {
 	// Called when someone uses the command.
 	@Override
@@ -24,7 +26,7 @@ public class CommandFunTest implements CommandExecutor {
 			WorldCreator creator = new WorldCreator("testworld");
 			creator.environment(Environment.NORMAL);
 			creator.generateStructures(false);
-			creator.generator(new TestWorldGenerator());
+			creator.generator(new GridWorldGenerator());
 
 			world = creator.createWorld();
 			world.setMonsterSpawnLimit(0);

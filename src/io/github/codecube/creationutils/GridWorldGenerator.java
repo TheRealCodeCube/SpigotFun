@@ -1,4 +1,4 @@
-package io.github.codecube.spigotfun;
+package io.github.codecube.creationutils;
 
 import java.util.Random;
 
@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.material.MaterialData;
 
-public class TestWorldGenerator extends ChunkGenerator {
+public class GridWorldGenerator extends ChunkGenerator {
 	@Override
 	public boolean canSpawn(World world, int x, int z) {
 		return true;
@@ -22,9 +22,7 @@ public class TestWorldGenerator extends ChunkGenerator {
 		data.setRegion(1, 0, 1, 16, 1, 16, new MaterialData(Material.STAINED_CLAY, (byte) 15));
 		data.setBlock(15, 0, 0, new MaterialData(Material.STAINED_CLAY, (byte) 14));
 		data.setBlock(14, 0, 0, new MaterialData(Material.STAINED_CLAY, (byte) 14));
-		data.setBlock(14, 0, 1, new MaterialData(Material.STAINED_CLAY, (byte) 14));
 		data.setBlock(0, 0, 15, new MaterialData(Material.STAINED_CLAY, (byte) 11));
-		data.setBlock(1, 0, 14, new MaterialData(Material.STAINED_CLAY, (byte) 11));
 		data.setBlock(0, 0, 14, new MaterialData(Material.STAINED_CLAY, (byte) 11));
 
 		return data;
