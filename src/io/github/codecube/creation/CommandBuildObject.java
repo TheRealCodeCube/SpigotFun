@@ -14,12 +14,14 @@ import org.bukkit.entity.Player;
 import io.github.codecube.util.FileUtils;
 
 public class CommandBuildObject implements CommandExecutor {
+	public static final String OBJECT_EDITOR_WORLD_PREFIX = "objecteditor";
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 
-			World world = Bukkit.getWorld("objectworld");
+			World world = Bukkit.getWorld(OBJECT_EDITOR_WORLD_PREFIX + "0");
 			if (world != null) {
 				System.out.println("Deleting world...");
 				if (!Bukkit.unloadWorld(world, true)) {
@@ -30,7 +32,7 @@ public class CommandBuildObject implements CommandExecutor {
 				FileUtils.deleteFolder(directory);
 			}
 
-			WorldCreator creator = new WorldCreator("objectworld");
+			WorldCreator creator = new WorldCreator(OBJECT_EDITOR_WORLD_PREFIX + "0");
 			creator.environment(Environment.NORMAL);
 			creator.generateStructures(false);
 			creator.generator(new GridWorldGenerator());
@@ -40,6 +42,9 @@ public class CommandBuildObject implements CommandExecutor {
 			world.setAnimalSpawnLimit(0);
 
 			player.teleport(world.getSpawnLocation());
+		} else {
+			sender.sendMessage("You must be a player to use this command!");
+			return false;
 		}
 		return true;
 	}

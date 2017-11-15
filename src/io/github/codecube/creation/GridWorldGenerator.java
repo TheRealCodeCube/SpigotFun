@@ -25,6 +25,10 @@ public class GridWorldGenerator extends ChunkGenerator {
 		data.setBlock(0, 0, 15, new MaterialData(Material.STAINED_CLAY, (byte) 11));
 		data.setBlock(0, 0, 14, new MaterialData(Material.STAINED_CLAY, (byte) 11));
 
+		if ((x == 0) && (z == 0)) { // Origin marker.
+			data.setBlock(0, 0, 0, Material.DIAMOND_BLOCK);
+		}
+
 		return data;
 	}
 
