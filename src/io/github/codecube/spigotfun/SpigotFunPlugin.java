@@ -24,7 +24,7 @@ public class SpigotFunPlugin extends JavaPlugin {
 		// This command allows for creation of objects.
 		getCommand("buildobject").setExecutor(new CommandBuildObject());
 		// This command saves the object the user is editing to a file to be used later.
-		getCommand("save").setExecutor(new CommandSaveObject());
+		getCommand("save").setExecutor(new CommandSaveObject()); // TODO: NYI
 	}
 
 	// Called when the plugin is unloaded / disabled.
