@@ -6,10 +6,10 @@ import org.bukkit.block.Block;
 public class BlockProp extends Prop {
 	@Override
 	protected boolean onPlace() {
-		if (getPosition() == null) {
+		if (worldPosition == null) {
 			return false;
 		}
-		Block block = getPosition().getBlock();
+		Block block = worldPosition.getBlock();
 		block.setType(Material.STONE);
 		block.setData((byte) 0);
 		return true;
@@ -17,10 +17,10 @@ public class BlockProp extends Prop {
 
 	@Override
 	protected boolean onDestroy() {
-		if (getPosition() == null) {
+		if (worldPosition == null) {
 			return false;
 		}
-		Block block = getPosition().getBlock();
+		Block block = worldPosition.getBlock();
 		block.setType(Material.AIR);
 		return true;
 	}

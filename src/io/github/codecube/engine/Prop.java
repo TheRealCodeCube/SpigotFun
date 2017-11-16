@@ -1,32 +1,92 @@
 package io.github.codecube.engine;
 
-import org.bukkit.Location;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Prop {
-	private Location position;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.util.Vector;
+
+public class Prop {
+	private World world = null;
+	private Vector position = new Vector(0, 0, 0);
+	protected Location worldPosition = null;
+	private List<Prop> children = new ArrayList<>();
+	private Prop parent = null;
 	private boolean placed = false;
 
-	public void setPosition(Location newPosition) {
+	public void setPosition(Vector newPosition) {
 		position = newPosition;
 	}
 
-	public Location getPosition() {
+	public Vector getPosition() {
 		return position;
 	}
 
-	protected abstract boolean onPlace();
+	private Vector getRealPosition() {
+		if (parent == null) {
+			return position;
+		} else {
+			return position.add(parent.getRealPosition());
+		}
+	}
 
-	public boolean place() {
+	public void addChild(Prop child) {
+		child.parent = this;
+		children.add(child);
+	}
+
+	public List<Prop> getChildren() {
+		return children;
+	}
+
+	public boolean removeChild(Prop child) {
+		child.parent = null;
+		return children.remove(child);
+	}
+
+	public void removeChild(int index) {
+		children.get(index).parent = null;
+		children.remove(index);
+	}
+
+	public void clearChildren() {
+		for (Prop child : children) {
+			child.parent = null;
+		}
+		children.clear();
+	}
+
+	protected boolean onPlace() {
+		return true;
+	}
+
+	public boolean place(World container) {
+		Vector p = getRealPosition();
+		world = container;
+		worldPosition = new Location(world, p.getX(), p.getY(), p.getZ());
 		if (!placed) {
+			for (Prop child : children) {
+				if (!child.place(container)) {
+					return false;
+				}
+			}
 			placed = onPlace();
 		}
 		return placed;
 	}
 
-	protected abstract boolean onDestroy();
+	protected boolean onDestroy() {
+		return true;
+	}
 
 	public boolean destroy() {
 		if (placed) {
+			for (Prop child : children) {
+				if (!child.destroy()) {
+					return false;
+				}
+			}
 			placed = !onDestroy();
 		}
 		return !placed;
