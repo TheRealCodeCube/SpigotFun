@@ -1,4 +1,4 @@
-package io.github.codecube.creation;
+package io.github.codecube.engine;
 
 import java.util.Random;
 

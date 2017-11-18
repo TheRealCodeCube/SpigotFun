@@ -4,8 +4,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.codecube.creation.CommandBuildObject;
 import io.github.codecube.creation.CommandSaveObject;
-import io.github.codecube.creation.EditorWorld;
 import io.github.codecube.creation.ToolbarListener;
+import io.github.codecube.engine.Scene;
+import io.github.codecube.engine.ScenesUpdater;
 
 public class SpigotFunPlugin extends JavaPlugin {
 	// Called when the plugin is first registered.
@@ -17,11 +18,6 @@ public class SpigotFunPlugin extends JavaPlugin {
 		// Register the test event listener.
 		getServer().getPluginManager().registerEvents(new TestListener(), this);
 
-		// Ok, now for real non-testing stuff.
-		// Load the editor world now, otherwise when it is created later, the code will
-		// not realize that there is already stuff in it and it will not be cleared.
-		EditorWorld.getInstance().getWorld(); // Sets up the editor world.
-
 		// This command allows for creation of objects.
 		getCommand("buildobject").setExecutor(new CommandBuildObject());
 		// This command saves the object the user is editing to a file to be used later.
@@ -29,11 +25,16 @@ public class SpigotFunPlugin extends JavaPlugin {
 
 		// Handles the user using toolbar items in their hotbar.
 		getServer().getPluginManager().registerEvents(new ToolbarListener(), this);
+
+		// Performs updates on scenes so that ai, animations, and other logic will
+		// execute.
+		ScenesUpdater.start();
 	}
 
 	// Called when the plugin is unloaded / disabled.
 	@Override
 	public void onDisable() {
-
+		ScenesUpdater.stop();
+		Scene.stopAllScenes();
 	}
 }

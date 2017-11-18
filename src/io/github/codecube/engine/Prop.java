@@ -95,4 +95,15 @@ public class Prop {
 		}
 		return !placed;
 	}
+
+	protected void onUpdate(int timeDelta) {
+
+	}
+
+	public void update(int timeDelta) {
+		onUpdate(timeDelta);
+		for (Prop child : children) {
+			child.update(timeDelta);
+		}
+	}
 }
