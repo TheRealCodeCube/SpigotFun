@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 
 public class BlockProp extends Prop {
 	@Override
-	protected boolean onPlace() {
+	protected boolean onCreate() {
 		if (worldPosition == null) {
 			return false;
 		}

@@ -57,21 +57,25 @@ public class Prop {
 		children.clear();
 	}
 
-	protected boolean onPlace() {
+	protected void onPositionChange() {
+
+	}
+
+	protected boolean onCreate() {
 		return true;
 	}
 
-	public boolean place(World container) {
+	public boolean create(World container) {
 		Vector p = getRealPosition();
 		world = container;
 		worldPosition = new Location(world, p.getX(), p.getY(), p.getZ());
 		if (!placed) {
 			for (Prop child : children) {
-				if (!child.place(container)) {
+				if (!child.create(container)) {
 					return false;
 				}
 			}
-			placed = onPlace();
+			placed = onCreate();
 		}
 		return placed;
 	}
