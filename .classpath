@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="file:/home/josh/workspace/Spigot/Spigot/Spigot-API/src/main/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/josh/workspace/Spigot/spigot-1.12.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
