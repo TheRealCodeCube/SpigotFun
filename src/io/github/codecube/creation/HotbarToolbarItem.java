@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
+import io.github.codecube.util.StoneHoeIcons;
+
 public class HotbarToolbarItem {
 	private ItemStack appearence = null;
 	private int slot = 0;
@@ -17,6 +19,10 @@ public class HotbarToolbarItem {
 
 	public HotbarToolbarItem(ItemStack appearence) {
 		this.appearence = appearence;
+	}
+
+	public HotbarToolbarItem(StoneHoeIcons icon) {
+		appearence = StoneHoeIcons.createIcon(icon);
 	}
 
 	public ItemStack getAppearence() {

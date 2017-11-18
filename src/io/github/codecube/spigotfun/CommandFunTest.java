@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import io.github.codecube.creation.HotbarToolbar;
 import io.github.codecube.creation.HotbarToolbarItem;
 import io.github.codecube.creation.HotbarToolbarItemListener;
+import io.github.codecube.util.StoneHoeIcons;
 
 public class CommandFunTest implements CommandExecutor {
 	// Called when someone uses the command.
@@ -18,7 +19,7 @@ public class CommandFunTest implements CommandExecutor {
 		// Test out HotbarToolbar
 		if (sender instanceof Player) {
 			sender.sendMessage("Doing it!");
-			HotbarToolbarItem item1 = new HotbarToolbarItem();
+			HotbarToolbarItem item1 = new HotbarToolbarItem(StoneHoeIcons.ICON_CLOCKWISE);
 			HotbarToolbarItem item2 = new HotbarToolbarItem();
 			item1.setListener(new HotbarToolbarItemListener() {
 				@Override
