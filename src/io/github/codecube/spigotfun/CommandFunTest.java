@@ -20,6 +20,9 @@ public class CommandFunTest implements CommandExecutor {
 		if (sender instanceof Player) {
 			sender.sendMessage("Doing it!");
 			HotbarToolbarItem item1 = new HotbarToolbarItem(StoneHoeIcons.ICON_CLOCKWISE);
+			item1.setName("Rotate");
+			item1.setDescription(
+					"Rotates a thing by a certain rotation amount so that it becomes more rotated than it was before and yeah more words.");
 			HotbarToolbarItem item2 = new HotbarToolbarItem();
 			item1.setListener(new HotbarToolbarItemListener() {
 				@Override

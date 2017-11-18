@@ -1,11 +1,17 @@
 package io.github.codecube.creation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.codecube.util.StoneHoeIcons;
+import net.md_5.bungee.api.ChatColor;
 
 public class HotbarToolbarItem {
 	private ItemStack appearence = null;
@@ -31,6 +37,48 @@ public class HotbarToolbarItem {
 
 	public void setAppearence(ItemStack newAppearence) {
 		appearence = newAppearence;
+	}
+
+	public void setName(String name) {
+		ItemMeta meta = appearence.getItemMeta();
+		meta.setDisplayName(name);
+		appearence.setItemMeta(meta);
+	}
+
+	public void setDescription(List<String> description) {
+		ItemMeta meta = appearence.getItemMeta();
+		description.set(0, ChatColor.RESET + description.get(0));
+		meta.setLore(description);
+		appearence.setItemMeta(meta);
+	}
+
+	public void setDescription(String[] description) {
+		setDescription(Arrays.asList(description));
+	}
+
+	public static final int WORD_WRAP_LINE_LENGTH = 30;
+
+	/**
+	 * This version does word wrapping.
+	 * 
+	 * @param description
+	 *            A string that will be word-wrapped and set as the lore for this
+	 *            item's appearence.
+	 */
+	public void setDescription(String description) {
+		String[] words = description.split(" ");
+		List<String> wordWrapped = new ArrayList<>();
+		int charCount = WORD_WRAP_LINE_LENGTH;
+		for (String word : words) {
+			if (charCount + 1 + word.length() > WORD_WRAP_LINE_LENGTH) {
+				charCount = word.length();
+				wordWrapped.add(word);
+			} else {
+				charCount += 1 + word.length();
+				wordWrapped.set(wordWrapped.size() - 1, wordWrapped.get(wordWrapped.size() - 1) + " " + word);
+			}
+		}
+		setDescription(wordWrapped);
 	}
 
 	public void setListener(HotbarToolbarItemListener listener) {
