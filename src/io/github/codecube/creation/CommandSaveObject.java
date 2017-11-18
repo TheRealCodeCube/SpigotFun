@@ -23,8 +23,8 @@ public class CommandSaveObject implements CommandExecutor {
 		}
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (!player.getWorld().getName().contains(CommandBuildObject.OBJECT_EDITOR_WORLD_PREFIX)) {
-				sender.sendMessage("You must be in an object editor to use this command!");
+			if (!player.getWorld().getName().contains(EditorScene.EDITOR_WORLD_PREFIX)) {
+				sender.sendMessage("You must be in the editor to use this command!");
 				return false;
 			}
 			// TODO: Make this more efficient.

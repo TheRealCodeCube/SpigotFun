@@ -94,6 +94,10 @@ public class Scene {
 		destroyWorld();
 	}
 
+	public String getWorldName() {
+		return worldName;
+	}
+
 	public boolean worldStarted() {
 		return stage != null;
 	}

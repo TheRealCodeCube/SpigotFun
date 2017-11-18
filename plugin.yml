@@ -5,9 +5,9 @@ commands:
   funtest:
     description: It does fun things to test stuff!
     usage: /funtest [anything] [but] [these] [args] [will] [not] [make] [a] [difference]
-  buildobject:
-    description: Opens an object editor to build new objects with.
-    usage: /buildobject
+  editor:
+    description: Opens the editor, or closes it if you are already using it.
+    usage: /editor
   save:
     description: Saves an object that you are editing.
     usage: /save [object name]
