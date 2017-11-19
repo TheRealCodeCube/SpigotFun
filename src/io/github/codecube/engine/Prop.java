@@ -14,6 +14,19 @@ public class Prop {
 	private List<Prop> children = new ArrayList<>();
 	private Prop parent = null;
 	private boolean placed = false;
+	private String name = "unnamed";
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getType() {
+		return "Prop";
+	}
 
 	public void setPosition(Vector newPosition) {
 		position = newPosition;

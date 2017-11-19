@@ -6,6 +6,11 @@ public abstract class EntityProp extends Prop {
 	private Entity entity;
 	private boolean glowing = false, gravity = true, silent = false;
 
+	@Override
+	public String getType() {
+		return "Entity";
+	}
+
 	public boolean isGlowing() {
 		if (entity == null)
 			return glowing;

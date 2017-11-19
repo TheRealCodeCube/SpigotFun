@@ -14,6 +14,11 @@ public class ArmorStandProp extends EntityProp {
 			leftLegPose = new EulerAngle(0, 0, 0), rightLegPose = new EulerAngle(0, 0, 0),
 			headPose = new EulerAngle(0, 0, 0), bodyPose = new EulerAngle(0, 0, 0);
 
+	@Override
+	public String getType() {
+		return "Armor Stand";
+	}
+
 	public ArmorStandProp() {
 		super();
 		setGravity(false);
