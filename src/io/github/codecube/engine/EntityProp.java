@@ -11,6 +11,12 @@ public abstract class EntityProp extends Prop {
 		return "Entity";
 	}
 
+	@Override
+	protected void onPositionChange() {
+		if (entity != null)
+			entity.teleport(worldPosition);
+	}
+
 	public boolean isGlowing() {
 		if (entity == null)
 			return glowing;

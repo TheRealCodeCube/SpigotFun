@@ -114,7 +114,6 @@ public class HotbarToolbarItem {
 			return false;
 		Player user = parent.getUser();
 		boolean result = this.listener.onUse(this, user, action, user.isSneaking());
-		updateInternal(user);
 		return result;
 	}
 }

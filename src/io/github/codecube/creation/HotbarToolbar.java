@@ -12,8 +12,9 @@ public class HotbarToolbar {
 	private HotbarToolbarItem[] items = new HotbarToolbarItem[9];
 	private Player user = null;
 
-	public static HotbarToolbar createToolbar(Player user) {
-		return new HotbarToolbar(user);
+	public static void showToolbar(HotbarToolbar toolbar, Player user) {
+		unlinkToolbar(user);
+		toolbar.setUser(user);
 	}
 
 	public static void unlinkToolbar(HotbarToolbar toolbar) {
@@ -43,17 +44,21 @@ public class HotbarToolbar {
 
 	}
 
-	public HotbarToolbar(Player user) {
-		this.user = user;
-		toolbars.put(user, this);
-	}
-
-	public void setUser(Player newUser) {
-		if (user != null)
+	private void setUser(Player newUser) {
+		if (user != null) {
+			for (int i = 0; i < 9; i++) { // Clear hotbar.
+				user.getInventory().clear(i);
+			}
 			toolbars.remove(user);
+		}
 		user = newUser;
-		if (user != null)
+		if (user != null) {
+			for (int i = 0; i < 9; i++) { // Clear hotbar.
+				user.getInventory().clear(i);
+			}
 			toolbars.put(user, this);
+			update();
+		}
 	}
 
 	public Player getUser() {
