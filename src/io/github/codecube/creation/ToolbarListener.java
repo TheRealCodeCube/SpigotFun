@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class ToolbarListener implements Listener {
 	private static Map<UUID, Long> debouncing = new HashMap<>();
@@ -63,5 +64,10 @@ public class ToolbarListener implements Listener {
 				event.setCancelled(true);
 			debouncing.put(player.getUniqueId(), System.currentTimeMillis());
 		}
+	}
+
+	@EventHandler
+	public void onPlayerQuitEvent(PlayerQuitEvent event) {
+		HotbarToolbar.unlinkToolbar(event.getPlayer());
 	}
 }

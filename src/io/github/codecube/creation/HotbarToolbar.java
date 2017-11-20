@@ -99,6 +99,8 @@ public class HotbarToolbar {
 				items[i].setSlot(i);
 			}
 		}
+
+		items[0] = null;
 	}
 
 	public void update() {

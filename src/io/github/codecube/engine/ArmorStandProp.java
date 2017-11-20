@@ -22,8 +22,13 @@ public class ArmorStandProp extends EntityProp {
 			headPose = new EulerAngle(0, 0, 0), bodyPose = new EulerAngle(0, 0, 0);
 
 	@Override
-	public String getType() {
-		return "Armor Stand";
+	public String getTypeName() {
+		return "ArmorStand";
+	}
+
+	@Override
+	public StoneHoeIcons getEditorIcon() {
+		return StoneHoeIcons.ICON_ARMOR_STAND;
 	}
 
 	private interface PoseModifier {

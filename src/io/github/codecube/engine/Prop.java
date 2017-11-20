@@ -33,8 +33,12 @@ public class Prop {
 		return name;
 	}
 
-	public String getType() {
+	public String getTypeName() {
 		return "Prop";
+	}
+
+	public StoneHoeIcons getEditorIcon() {
+		return StoneHoeIcons.ICON_GENERIC;
 	}
 
 	protected HotbarToolbar createMiscToolbar() {
@@ -140,7 +144,7 @@ public class Prop {
 		return position;
 	}
 
-	protected Vector getRealPosition() {
+	public Vector getRealPosition() {
 		if (parent == null) {
 			return position;
 		} else {

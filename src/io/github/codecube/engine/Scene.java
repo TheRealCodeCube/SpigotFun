@@ -132,6 +132,10 @@ public class Scene {
 		props.clear();
 	}
 
+	public List<Prop> getProps() {
+		return props;
+	}
+
 	public boolean addPlayer(Player joining) {
 		if (stage == null)
 			if (!createWorld())

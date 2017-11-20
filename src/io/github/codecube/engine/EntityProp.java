@@ -13,8 +13,13 @@ public abstract class EntityProp extends Prop {
 	private boolean glowing = false, gravity = true, silent = false;
 
 	@Override
-	public String getType() {
+	public String getTypeName() {
 		return "Entity";
+	}
+
+	@Override
+	public StoneHoeIcons getEditorIcon() {
+		return StoneHoeIcons.ICON_GENERIC_FACE;
 	}
 
 	@Override
@@ -34,7 +39,7 @@ public abstract class EntityProp extends Prop {
 	}
 
 	@Override
-	protected Vector getRealPosition() {
+	public Vector getRealPosition() {
 		if (entity == null)
 			return super.getRealPosition();
 		else
