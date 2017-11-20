@@ -6,6 +6,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import io.github.codecube.creation.HotbarToolbar;
+import io.github.codecube.creation.HotbarToolbarItem;
+import io.github.codecube.creation.OpenToolbarHTIL;
+import io.github.codecube.creation.SimpleHTIL;
+import io.github.codecube.creation.ValueOffsetHTIL;
+import io.github.codecube.util.StoneHoeIcons;
+
 public class ArmorStandProp extends EntityProp {
 	private ArmorStand armorStand = null;
 	private boolean baseVisible = true, structureVisible = true, armsVisible = true, small = false;
@@ -17,6 +24,205 @@ public class ArmorStandProp extends EntityProp {
 	@Override
 	public String getType() {
 		return "Armor Stand";
+	}
+
+	private interface PoseModifier {
+		public void setPose(EulerAngle pose);
+
+		public EulerAngle getPose();
+	}
+
+	public HotbarToolbar createPoseEditorToolbar(PoseModifier modifier) {
+		HotbarToolbar tr = new HotbarToolbar();
+
+		final double LARGE = Math.PI / 4.0, SMALL = Math.PI / 32.0;
+
+		HotbarToolbarItem rotateX = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_X);
+		rotateX.setName("Rotate X");
+		rotateX.setListener(new ValueOffsetHTIL(LARGE, SMALL) {
+			@Override
+			protected void offset(double delta) {
+				modifier.setPose(modifier.getPose().add(delta, 0.0, 0.0));
+			}
+		});
+		tr.addItem(rotateX);
+
+		HotbarToolbarItem rotateY = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_Y);
+		rotateY.setName("Rotate Y");
+		rotateY.setListener(new ValueOffsetHTIL(LARGE, SMALL) {
+			@Override
+			protected void offset(double delta) {
+				modifier.setPose(modifier.getPose().add(0.0, delta, 0.0));
+			}
+		});
+		tr.addItem(rotateY);
+
+		HotbarToolbarItem rotateZ = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_Z);
+		rotateZ.setName("Rotate Z");
+		rotateZ.setListener(new ValueOffsetHTIL(LARGE, SMALL) {
+			@Override
+			protected void offset(double delta) {
+				modifier.setPose(modifier.getPose().add(0.0, 0.0, delta));
+			}
+		});
+		tr.addItem(rotateZ);
+
+		HotbarToolbarItem reset = new HotbarToolbarItem(StoneHoeIcons.ICON_RESET);
+		reset.setName("Reset Pose");
+		reset.setListener(new SimpleHTIL() {
+			@Override
+			protected void onUse() {
+				modifier.setPose(new EulerAngle(0.0, 0.0, 0.0));
+			}
+		});
+		tr.addItem(reset);
+
+		return tr;
+	}
+
+	public HotbarToolbar createPoseToolbar() {
+		HotbarToolbar tr = new HotbarToolbar();
+
+		HotbarToolbarItem head = new HotbarToolbarItem(StoneHoeIcons.ICON_HEAD);
+		head.setName("Edit Head");
+		head.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
+			@Override
+			public void setPose(EulerAngle pose) {
+				setHeadPose(pose);
+			}
+
+			@Override
+			public EulerAngle getPose() {
+				return getHeadPose();
+			}
+		}), tr));
+		tr.addItem(head);
+
+		HotbarToolbarItem rightArm = new HotbarToolbarItem(StoneHoeIcons.ICON_RIGHT_ARM);
+		rightArm.setName("Edit Right Arm");
+		rightArm.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
+			@Override
+			public void setPose(EulerAngle pose) {
+				setRightArmPose(pose);
+			}
+
+			@Override
+			public EulerAngle getPose() {
+				return getRightArmPose();
+			}
+		}), tr));
+		tr.addItem(rightArm);
+
+		HotbarToolbarItem leftArm = new HotbarToolbarItem(StoneHoeIcons.ICON_LEFT_ARM);
+		leftArm.setName("Edit Left Arm");
+		leftArm.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
+			@Override
+			public void setPose(EulerAngle pose) {
+				setLeftArmPose(pose);
+			}
+
+			@Override
+			public EulerAngle getPose() {
+				return getLeftArmPose();
+			}
+		}), tr));
+		tr.addItem(leftArm);
+
+		HotbarToolbarItem rightLeg = new HotbarToolbarItem(StoneHoeIcons.ICON_RIGHT_LEG);
+		rightLeg.setName("Edit Right Leg");
+		rightLeg.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
+			@Override
+			public void setPose(EulerAngle pose) {
+				setRightLegPose(pose);
+			}
+
+			@Override
+			public EulerAngle getPose() {
+				return getRightLegPose();
+			}
+		}), tr));
+		tr.addItem(rightLeg);
+
+		HotbarToolbarItem leftLeg = new HotbarToolbarItem(StoneHoeIcons.ICON_LEFT_LEG);
+		leftLeg.setName("Edit Left Leg");
+		leftLeg.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
+			@Override
+			public void setPose(EulerAngle pose) {
+				setLeftLegPose(pose);
+			}
+
+			@Override
+			public EulerAngle getPose() {
+				return getLeftLegPose();
+			}
+		}), tr));
+		tr.addItem(leftLeg);
+
+		HotbarToolbarItem body = new HotbarToolbarItem(StoneHoeIcons.ICON_BODY);
+		body.setName("Edit Body");
+		body.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
+			@Override
+			public void setPose(EulerAngle pose) {
+				setBodyPose(pose);
+			}
+
+			@Override
+			public EulerAngle getPose() {
+				return getBodyPose();
+			}
+		}), tr));
+		tr.addItem(body);
+
+		return tr;
+	}
+
+	@Override
+	public HotbarToolbar createMiscToolbar() {
+		HotbarToolbar tr = super.createMiscToolbar();
+
+		HotbarToolbarItem structureVisible = new HotbarToolbarItem(StoneHoeIcons.ICON_ARMOR_STAND_VISIBLE);
+		structureVisible.setName("Toggle Structure Visibility");
+		structureVisible.setListener(new SimpleHTIL() {
+			@Override
+			protected void onUse() {
+				setStructureVisible(!isStructureVisible());
+			}
+		});
+		tr.addItem(structureVisible);
+
+		HotbarToolbarItem armsVisible = new HotbarToolbarItem(StoneHoeIcons.ICON_ARMS_VISIBLE);
+		armsVisible.setName("Toggle Arm Visibility");
+		armsVisible.setListener(new SimpleHTIL() {
+			@Override
+			protected void onUse() {
+				setArmsVisible(!isArmsVisible());
+			}
+		});
+		tr.addItem(armsVisible);
+
+		HotbarToolbarItem baseVisible = new HotbarToolbarItem(StoneHoeIcons.ICON_BASEPLATE_VISIBLE);
+		baseVisible.setName("Toggle Baseplate Visibility");
+		baseVisible.setListener(new SimpleHTIL() {
+			@Override
+			protected void onUse() {
+				setBaseVisible(!isBaseVisible());
+			}
+		});
+		tr.addItem(baseVisible);
+
+		return tr;
+	}
+
+	@Override
+	public HotbarToolbar createToolbar() {
+		HotbarToolbar tr = super.createToolbar(), pose = createPoseToolbar();
+
+		HotbarToolbarItem gotoPose = new HotbarToolbarItem(StoneHoeIcons.ICON_POSE);
+		gotoPose.setName("Edit Pose");
+		gotoPose.setListener(new OpenToolbarHTIL(pose, tr));
+		tr.addItem(gotoPose);
+
+		return tr;
 	}
 
 	public ArmorStandProp() {

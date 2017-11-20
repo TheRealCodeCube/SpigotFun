@@ -4,10 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class ToggleHTIL implements HotbarToolbarItemListener {
+public abstract class SimpleHTIL implements HotbarToolbarItemListener {
 	@Override
 	public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
-		toggle();
+		onUse();
 		return true;
 	}
 
@@ -16,5 +16,5 @@ public abstract class ToggleHTIL implements HotbarToolbarItemListener {
 		return null;
 	}
 
-	protected abstract void toggle();
+	protected abstract void onUse();
 }

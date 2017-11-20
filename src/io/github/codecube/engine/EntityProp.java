@@ -5,7 +5,7 @@ import org.bukkit.util.Vector;
 
 import io.github.codecube.creation.HotbarToolbar;
 import io.github.codecube.creation.HotbarToolbarItem;
-import io.github.codecube.creation.ToggleHTIL;
+import io.github.codecube.creation.SimpleHTIL;
 import io.github.codecube.util.StoneHoeIcons;
 
 public abstract class EntityProp extends Prop {
@@ -48,9 +48,9 @@ public abstract class EntityProp extends Prop {
 
 		HotbarToolbarItem toggleGravity = new HotbarToolbarItem(StoneHoeIcons.ICON_GRAVITY);
 		toggleGravity.setName("Toggle Gravity");
-		toggleGravity.setListener(new ToggleHTIL() {
+		toggleGravity.setListener(new SimpleHTIL() {
 			@Override
-			protected void toggle() {
+			protected void onUse() {
 				setGravity(!hasGravity());
 			}
 		});
@@ -58,9 +58,9 @@ public abstract class EntityProp extends Prop {
 
 		HotbarToolbarItem toggleGlow = new HotbarToolbarItem(StoneHoeIcons.ICON_OUTLINE);
 		toggleGlow.setName("Toggle Glow");
-		toggleGlow.setListener(new ToggleHTIL() {
+		toggleGlow.setListener(new SimpleHTIL() {
 			@Override
-			protected void toggle() {
+			protected void onUse() {
 				setGlowing(!isGlowing());
 			}
 		});
