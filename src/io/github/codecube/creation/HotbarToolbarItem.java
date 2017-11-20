@@ -18,6 +18,7 @@ public class HotbarToolbarItem {
 	private int slot = 0;
 	private HotbarToolbar parent = null;
 	private HotbarToolbarItemListener listener = null;
+	private boolean updatedOnce = false;
 
 	public HotbarToolbarItem() {
 		appearence = new ItemStack(Material.STONE, 32);
@@ -37,12 +38,16 @@ public class HotbarToolbarItem {
 
 	public void setAppearence(ItemStack newAppearence) {
 		appearence = newAppearence;
+		if (updatedOnce)
+			update();
 	}
 
 	public void setName(String name) {
 		ItemMeta meta = appearence.getItemMeta();
 		meta.setDisplayName(name);
 		appearence.setItemMeta(meta);
+		if (updatedOnce)
+			update();
 	}
 
 	public void setDescription(List<String> description) {
@@ -50,10 +55,14 @@ public class HotbarToolbarItem {
 		description.set(0, ChatColor.RESET + description.get(0));
 		meta.setLore(description);
 		appearence.setItemMeta(meta);
+		if (updatedOnce)
+			update();
 	}
 
 	public void setDescription(String[] description) {
 		setDescription(Arrays.asList(description));
+		if (updatedOnce)
+			update();
 	}
 
 	public static final int WORD_WRAP_LINE_LENGTH = 30;
@@ -79,6 +88,8 @@ public class HotbarToolbarItem {
 			}
 		}
 		setDescription(wordWrapped);
+		if (updatedOnce)
+			update();
 	}
 
 	public void setListener(HotbarToolbarItemListener listener) {
@@ -91,9 +102,12 @@ public class HotbarToolbarItem {
 
 	public void setSlot(int slot) {
 		this.slot = slot;
+		if (updatedOnce)
+			update();
 	}
 
 	private void updateInternal(Player holder) {
+		updatedOnce = true;
 		holder.getInventory().setItem(slot, appearence);
 	}
 

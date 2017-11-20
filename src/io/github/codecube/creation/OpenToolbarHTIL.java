@@ -16,6 +16,7 @@ public class OpenToolbarHTIL implements HotbarToolbarItemListener {
 	public OpenToolbarHTIL(HotbarToolbar toOpen, HotbarToolbar parent) {
 		this.toOpen = toOpen;
 		HotbarToolbarItem back = new HotbarToolbarItem(StoneHoeIcons.ICON_BACK_NAV);
+		back.setName("Go Back");
 		back.setListener(new OpenToolbarHTIL(parent));
 		toOpen.addItem(back, 0);
 	}

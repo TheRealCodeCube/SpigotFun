@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.util.Vector;
 
+import io.github.codecube.creation.ChatInputHTIL;
 import io.github.codecube.creation.HotbarToolbar;
 import io.github.codecube.creation.HotbarToolbarItem;
 import io.github.codecube.creation.OpenToolbarHTIL;
@@ -34,7 +37,7 @@ public class Prop {
 		return "Prop";
 	}
 
-	public HotbarToolbar createToolbar() {
+	protected HotbarToolbar createToolbar(List<HotbarToolbarItem> extraMiscItems) {
 		HotbarToolbar tr = new HotbarToolbar(), misc = new HotbarToolbar(), translate = new HotbarToolbar();
 
 		HotbarToolbarItem gotoMisc = new HotbarToolbarItem(StoneHoeIcons.ICON_ELLIPSIS);
@@ -53,6 +56,23 @@ public class Prop {
 		 * @Override public ItemStack onUpdate(HotbarToolbarItem used, Player holder,
 		 * boolean sneaking) { return null; } });
 		 */
+
+		HotbarToolbarItem rename = new HotbarToolbarItem(StoneHoeIcons.ICON_EDIT);
+		rename.setName("Rename (Currently " + getName() + ")");
+		rename.setListener(new ChatInputHTIL("What should the prop's name be?") {
+			@Override
+			public void onInput(HotbarToolbarItem used, Player user, Action action, boolean sneaking, String input) {
+				setName(input);
+				used.setName("Rename (Currently " + getName() + ")");
+			}
+		});
+		misc.addItem(rename, 1);
+
+		int miscIndex = 2;
+		for (HotbarToolbarItem item : extraMiscItems) {
+			misc.addItem(item, miscIndex);
+			miscIndex++;
+		}
 
 		HotbarToolbarItem gotoTranslate = new HotbarToolbarItem(StoneHoeIcons.ICON_TRANSLATE);
 		gotoTranslate.setName("Translate");
@@ -93,6 +113,10 @@ public class Prop {
 		translate.addItem(translateZ, 3);
 
 		return tr;
+	}
+
+	public HotbarToolbar createToolbar() {
+		return createToolbar(new ArrayList<HotbarToolbarItem>());
 	}
 
 	public void setPosition(Vector newPosition) {

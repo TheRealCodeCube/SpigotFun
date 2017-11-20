@@ -1,6 +1,13 @@
 package io.github.codecube.engine;
 
+import java.util.List;
+
 import org.bukkit.entity.Entity;
+
+import io.github.codecube.creation.HotbarToolbar;
+import io.github.codecube.creation.HotbarToolbarItem;
+import io.github.codecube.creation.ToggleHTIL;
+import io.github.codecube.util.StoneHoeIcons;
 
 public abstract class EntityProp extends Prop {
 	private Entity entity;
@@ -15,6 +22,33 @@ public abstract class EntityProp extends Prop {
 	protected void onPositionChange() {
 		if (entity != null)
 			entity.teleport(worldPosition);
+	}
+
+	@Override
+	protected HotbarToolbar createToolbar(List<HotbarToolbarItem> extraMiscItems) {
+		HotbarToolbarItem toggleGravity = new HotbarToolbarItem(StoneHoeIcons.ICON_GRAVITY);
+		toggleGravity.setName("Toggle Gravity");
+		toggleGravity.setListener(new ToggleHTIL() {
+			@Override
+			protected void toggle() {
+				setGravity(!hasGravity());
+			}
+		});
+		extraMiscItems.add(0, toggleGravity);
+
+		HotbarToolbarItem toggleGlow = new HotbarToolbarItem(StoneHoeIcons.ICON_OUTLINE);
+		toggleGlow.setName("Toggle Glow");
+		toggleGlow.setListener(new ToggleHTIL() {
+			@Override
+			protected void toggle() {
+				setGlowing(!isGlowing());
+			}
+		});
+		extraMiscItems.add(1, toggleGlow);
+
+		HotbarToolbar tr = super.createToolbar(extraMiscItems);
+
+		return tr;
 	}
 
 	public boolean isGlowing() {
