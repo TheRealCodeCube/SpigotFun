@@ -37,13 +37,8 @@ public class Prop {
 		return "Prop";
 	}
 
-	protected HotbarToolbar createToolbar(List<HotbarToolbarItem> extraMiscItems) {
-		HotbarToolbar tr = new HotbarToolbar(), misc = new HotbarToolbar(), translate = new HotbarToolbar();
-
-		HotbarToolbarItem gotoMisc = new HotbarToolbarItem(StoneHoeIcons.ICON_ELLIPSIS);
-		gotoMisc.setName("Basic / Misc");
-		gotoMisc.setListener(new OpenToolbarHTIL(misc, tr));
-		tr.addItem(gotoMisc, 1);
+	protected HotbarToolbar createMiscToolbar() {
+		HotbarToolbar tr = new HotbarToolbar();
 
 		/*
 		 * HotbarToolbarItem delete = new HotbarToolbarItem(StoneHoeIcons.ICON_DELETE);
@@ -66,18 +61,13 @@ public class Prop {
 				used.setName("Rename (Currently " + getName() + ")");
 			}
 		});
-		misc.addItem(rename, 1);
+		tr.addItem(rename);
 
-		int miscIndex = 2;
-		for (HotbarToolbarItem item : extraMiscItems) {
-			misc.addItem(item, miscIndex);
-			miscIndex++;
-		}
+		return tr;
+	}
 
-		HotbarToolbarItem gotoTranslate = new HotbarToolbarItem(StoneHoeIcons.ICON_TRANSLATE);
-		gotoTranslate.setName("Translate");
-		gotoTranslate.setListener(new OpenToolbarHTIL(translate, tr));
-		tr.addItem(gotoTranslate, 2);
+	protected HotbarToolbar createTranslateToolbar() {
+		HotbarToolbar tr = new HotbarToolbar();
 
 		HotbarToolbarItem translateX = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_X);
 		translateX.setName("Move X");
@@ -88,7 +78,7 @@ public class Prop {
 				setPosition(getPosition().add(new Vector(delta, 0, 0)));
 			}
 		});
-		translate.addItem(translateX, 1);
+		tr.addItem(translateX);
 
 		HotbarToolbarItem translateY = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_Y);
 		translateY.setName("Move Y");
@@ -99,7 +89,7 @@ public class Prop {
 				setPosition(getPosition().add(new Vector(0, delta, 0)));
 			}
 		});
-		translate.addItem(translateY, 2);
+		tr.addItem(translateY);
 
 		HotbarToolbarItem translateZ = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_Z);
 		translateZ.setName("Move Z");
@@ -110,19 +100,39 @@ public class Prop {
 				setPosition(getPosition().add(new Vector(0, 0, delta)));
 			}
 		});
-		translate.addItem(translateZ, 3);
+		tr.addItem(translateZ);
 
 		return tr;
 	}
 
 	public HotbarToolbar createToolbar() {
-		return createToolbar(new ArrayList<HotbarToolbarItem>());
+		HotbarToolbar tr = new HotbarToolbar(), misc = createMiscToolbar(), translate = createTranslateToolbar();
+
+		HotbarToolbarItem gotoMisc = new HotbarToolbarItem(StoneHoeIcons.ICON_ELLIPSIS);
+		gotoMisc.setName("Basic / Misc");
+		gotoMisc.setListener(new OpenToolbarHTIL(misc, tr));
+		tr.addItem(gotoMisc);
+
+		HotbarToolbarItem gotoTranslate = new HotbarToolbarItem(StoneHoeIcons.ICON_TRANSLATE);
+		gotoTranslate.setName("Translate");
+		gotoTranslate.setListener(new OpenToolbarHTIL(translate, tr));
+		tr.addItem(gotoTranslate);
+
+		return tr;
 	}
 
 	public void setPosition(Vector newPosition) {
-		position = newPosition;
+		offsetPosition(newPosition.subtract(position));
+	}
+
+	public void offsetPosition(Vector delta) {
+		position = position.add(delta);
 		if (placed) {
-			updateWorldPosition();
+			worldPosition = worldPosition.add(delta);
+			onPositionChange();
+			for (Prop child : children) {
+				child.offsetPosition(delta);
+			}
 		}
 	}
 
@@ -130,16 +140,7 @@ public class Prop {
 		return position;
 	}
 
-	private void updateWorldPosition() {
-		Vector p = getRealPosition();
-		worldPosition = new Location(world, p.getX(), p.getY(), p.getZ());
-		onPositionChange();
-		for (Prop child : children) {
-			child.updateWorldPosition();
-		}
-	}
-
-	private Vector getRealPosition() {
+	protected Vector getRealPosition() {
 		if (parent == null) {
 			return position;
 		} else {
@@ -175,6 +176,10 @@ public class Prop {
 			child.parent = null;
 		}
 		children.clear();
+	}
+
+	public Prop getParent() {
+		return parent;
 	}
 
 	protected boolean onCreate() {

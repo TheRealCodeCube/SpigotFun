@@ -71,6 +71,36 @@ public class HotbarToolbar {
 		items[slot] = item;
 	}
 
+	public void addItem(HotbarToolbarItem item) {
+		for (int i = 0; i < 9; i++) {
+			System.out.print(i);
+			System.out.println(items[i] == null);
+			if (items[i] == null) {
+				item.setSlot(i);
+				item.setParent(this);
+				items[i] = item;
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Pushes all items to the right by 1 slot, overflow is removed.
+	 */
+	public void offsetItems() {
+		if (items[8] != null) {
+			items[8].setParent(null);
+			items[8] = null;
+		}
+
+		for (int i = 8; i > 0; i--) {
+			if (items[i - 1] != null) {
+				items[i] = items[i - 1];
+				items[i].setSlot(i);
+			}
+		}
+	}
+
 	public void update() {
 		if (user == null)
 			return;

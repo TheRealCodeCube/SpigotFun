@@ -1,8 +1,7 @@
 package io.github.codecube.engine;
 
-import java.util.List;
-
 import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
 import io.github.codecube.creation.HotbarToolbar;
 import io.github.codecube.creation.HotbarToolbarItem;
@@ -25,7 +24,28 @@ public abstract class EntityProp extends Prop {
 	}
 
 	@Override
-	protected HotbarToolbar createToolbar(List<HotbarToolbarItem> extraMiscItems) {
+	public Vector getPosition() {
+		if (entity == null)
+			return super.getPosition();
+		else if (getParent() == null)
+			return entity.getLocation().toVector();
+		else
+			return entity.getLocation().toVector().subtract(super.getRealPosition());
+	}
+
+	@Override
+	protected Vector getRealPosition() {
+		if (entity == null)
+			return super.getRealPosition();
+		else
+			return entity.getLocation().toVector();
+
+	}
+
+	@Override
+	protected HotbarToolbar createMiscToolbar() {
+		HotbarToolbar tr = super.createMiscToolbar();
+
 		HotbarToolbarItem toggleGravity = new HotbarToolbarItem(StoneHoeIcons.ICON_GRAVITY);
 		toggleGravity.setName("Toggle Gravity");
 		toggleGravity.setListener(new ToggleHTIL() {
@@ -34,7 +54,7 @@ public abstract class EntityProp extends Prop {
 				setGravity(!hasGravity());
 			}
 		});
-		extraMiscItems.add(0, toggleGravity);
+		tr.addItem(toggleGravity);
 
 		HotbarToolbarItem toggleGlow = new HotbarToolbarItem(StoneHoeIcons.ICON_OUTLINE);
 		toggleGlow.setName("Toggle Glow");
@@ -44,9 +64,7 @@ public abstract class EntityProp extends Prop {
 				setGlowing(!isGlowing());
 			}
 		});
-		extraMiscItems.add(1, toggleGlow);
-
-		HotbarToolbar tr = super.createToolbar(extraMiscItems);
+		tr.addItem(toggleGlow);
 
 		return tr;
 	}
