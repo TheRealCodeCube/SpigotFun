@@ -1,5 +1,5 @@
-name: SpigotFunPlugin
-main: io.github.codecube.spigotfun.SpigotFunPlugin
+name: Waterfall
+main: io.github.codecube.waterfall.core.WaterfallPlugin
 version: 1.0
 commands: 
   funtest:
