@@ -3,6 +3,7 @@ package io.github.codecube.waterfall.animation;
 import java.util.HashMap;
 
 public class AnimationData extends HashMap<Integer, Double> {
+	private static final long serialVersionUID = 110841258923913958L;
 	private Animation parent;
 
 	public AnimationData(Animation parent) {
@@ -88,7 +89,7 @@ public class AnimationData extends HashMap<Integer, Double> {
 		} else if (afterKeyframe == parent.getDuration()) { // There is no end keyframe to interpolate to.
 			return get(beforeKeyframe);
 		} else {
-			double percentage = (frame - beforeKeyframe) / (afterKeyframe - beforeKeyframe);
+			double percentage = (double) (frame - beforeKeyframe) / (double) (afterKeyframe - beforeKeyframe);
 			return interpolate(get(beforeKeyframe), get(afterKeyframe), percentage);
 		}
 	}
@@ -97,7 +98,35 @@ public class AnimationData extends HashMap<Integer, Double> {
 		return containsKey(frame);
 	}
 
+	public boolean hasKeyframeOnCurrentFrame() {
+		return containsKey(parent.getCurrentFrame());
+	}
+
 	public void deleteKeyframe(int frame) {
-		remove(frame);
+		// Code prevents problems with deleting the last keyframe.
+		if (hasKeyframe(frame))
+			if (size() == 1)
+				put(frame, 0.0);
+			else
+				remove(frame);
+	}
+
+	public void deleteCurrentKeyframe() {
+		deleteKeyframe(parent.getCurrentFrame());
+	}
+
+	public void clearKeyframes() {
+		clear();
+		put(parent.getCurrentFrame(), 0.0); // No keyframes = ugly stacktraces.
+	}
+
+	public void clearKeyframesExcept(int frame) {
+		double value = getValue(frame);
+		clear();
+		put(frame, value);
+	}
+
+	public void clearKeyframesExceptCurrent() {
+		clearKeyframesExcept(parent.getCurrentFrame());
 	}
 }

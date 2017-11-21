@@ -31,9 +31,6 @@ public class Prop {
 	private String name = "unnamed";
 
 	public Prop() {
-		Animation defaultAnimation = data.createNewAnimation();
-		data.setCurrentAnimation(defaultAnimation);
-
 		position.setListener(new AnimationListener<Vector>() {
 			@Override
 			public void onValueChange(Vector newValue) {
@@ -52,6 +49,11 @@ public class Prop {
 		});
 	}
 
+	public void createDefaultAnimation() {
+		Animation defaultAnimation = data.createNewAnimation();
+		data.setCurrentAnimation(defaultAnimation);
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -66,6 +68,52 @@ public class Prop {
 
 	public StoneHoeIcons getEditorIcon() {
 		return StoneHoeIcons.ICON_GENERIC;
+	}
+
+	protected HotbarToolbar createAnimationToolbar() {
+		HotbarToolbar tr = new HotbarToolbar();
+
+		HotbarToolbarItem pausePlay = new HotbarToolbarItem(StoneHoeIcons.ICON_PLAY);
+		pausePlay.setName("Play");
+		tr.addItem(pausePlay);
+
+		HotbarToolbarItem seek = new HotbarToolbarItem(StoneHoeIcons.ICON_SEEK);
+		seek.setName("Seek (Current frame is " + data.getCurrentAnimation().getCurrentFrame() + ")");
+		seek.setDescription("left/right = +/-, sneak = large increments.");
+		seek.setListener(new ValueOffsetHTIL(1.0, 10.0) {
+			@Override
+			public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
+				boolean result = super.onUse(used, user, action, sneaking);
+				used.setName("Seek (Current frame is " + data.getCurrentAnimation().getCurrentFrame() + ")");
+				return result;
+			}
+
+			@Override
+			protected void offset(double delta) {
+				data.getCurrentAnimation().offsetCurrentFrame((int) delta);
+			}
+		});
+		tr.addItem(seek);
+
+		HotbarToolbarItem changeRange = new HotbarToolbarItem(StoneHoeIcons.ICON_RANGE);
+		changeRange.setName("Change Duration (Currently is " + data.getCurrentAnimation().getDuration() + ")");
+		changeRange.setDescription("left/right = +/-. sneak = large increments.");
+		changeRange.setListener(new ValueOffsetHTIL(1.0, 10.0) {
+			@Override
+			public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
+				boolean result = super.onUse(used, user, action, sneaking);
+				used.setName("Change Duration (Currently is " + data.getCurrentAnimation().getDuration() + ")");
+				return result;
+			}
+
+			@Override
+			protected void offset(double delta) {
+				data.getCurrentAnimation().offsetDuration((int) delta);
+			}
+		});
+		tr.addItem(changeRange);
+
+		return tr;
 	}
 
 	protected HotbarToolbar createMiscToolbar() {
@@ -98,47 +146,13 @@ public class Prop {
 		return tr;
 	}
 
-	protected HotbarToolbar createTranslateToolbar() {
-		HotbarToolbar tr = new HotbarToolbar();
-
-		HotbarToolbarItem translateX = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_X);
-		translateX.setName("Move X");
-		translateX.setDescription("left/right = +/-, sneak = small increments");
-		translateX.setListener(new ValueOffsetHTIL() {
-			@Override
-			protected void offset(double delta) {
-				setPosition(getPosition().add(new Vector(delta, 0, 0)));
-			}
-		});
-		tr.addItem(translateX);
-
-		HotbarToolbarItem translateY = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_Y);
-		translateY.setName("Move Y");
-		translateY.setDescription("left/right = +/-, sneak = small increments");
-		translateY.setListener(new ValueOffsetHTIL() {
-			@Override
-			protected void offset(double delta) {
-				setPosition(getPosition().add(new Vector(0, delta, 0)));
-			}
-		});
-		tr.addItem(translateY);
-
-		HotbarToolbarItem translateZ = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_Z);
-		translateZ.setName("Move Z");
-		translateZ.setDescription("left/right = +/-, sneak = small increments");
-		translateZ.setListener(new ValueOffsetHTIL() {
-			@Override
-			protected void offset(double delta) {
-				setPosition(getPosition().add(new Vector(0, 0, delta)));
-			}
-		});
-		tr.addItem(translateZ);
-
-		return position.createEditorToolbar();
-	}
-
 	public HotbarToolbar createToolbar() {
-		HotbarToolbar tr = new HotbarToolbar(), misc = createMiscToolbar(), translate = createTranslateToolbar();
+		HotbarToolbar tr = new HotbarToolbar(), misc = createMiscToolbar(), translate = position.createEditorToolbar();
+
+		HotbarToolbarItem gotoAnimation = new HotbarToolbarItem(StoneHoeIcons.ICON_ANIMATION);
+		gotoAnimation.setName("Animation Settings");
+		gotoAnimation.setListener(new OpenToolbarHTIL(createAnimationToolbar(), tr));
+		tr.addItem(gotoAnimation);
 
 		HotbarToolbarItem gotoMisc = new HotbarToolbarItem(StoneHoeIcons.ICON_ELLIPSIS);
 		gotoMisc.setName("Basic / Misc");

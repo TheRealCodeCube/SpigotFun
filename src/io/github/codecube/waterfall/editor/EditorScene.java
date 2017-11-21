@@ -45,6 +45,7 @@ public class EditorScene extends Scene {
 					public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 						try {
 							Prop newProp = example.getClass().newInstance();
+							newProp.createDefaultAnimation();
 							newProp.setPosition(user.getLocation().add(1.0, 0.0, 0.0).toVector());
 							addProp(newProp);
 						} catch (InstantiationException | IllegalAccessException e) {

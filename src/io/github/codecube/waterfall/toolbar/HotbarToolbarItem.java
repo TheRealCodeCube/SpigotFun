@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.codecube.waterfall.util.StoneHoeIcons;
-import net.md_5.bungee.api.ChatColor;
 
 public class HotbarToolbarItem {
 	private ItemStack appearence = null;
@@ -43,10 +43,18 @@ public class HotbarToolbarItem {
 
 	public void setName(String name) {
 		ItemMeta meta = appearence.getItemMeta();
-		meta.setDisplayName(name);
+		meta.setDisplayName(ChatColor.RESET + name);
 		appearence.setItemMeta(meta);
 		if (updatedOnce)
 			update();
+	}
+
+	public String getName() {
+		return appearence.getItemMeta().getDisplayName().substring(1); // Strip off the beginning RESET character.
+	}
+
+	public String getNameWithoutFormatting() {
+		return ChatColor.stripColor(appearence.getItemMeta().getDisplayName());
 	}
 
 	public void setDescription(List<String> description) {
@@ -115,6 +123,7 @@ public class HotbarToolbarItem {
 			return;
 		Player holder = parent.getUser();
 		if (this.listener != null) {
+			updatedOnce = false; // Disable calling this function again, to prevent SO errors.
 			ItemStack newAppearence = this.listener.onUpdate(this, holder, holder.isSneaking());
 			if (newAppearence != null)
 				appearence = newAppearence;

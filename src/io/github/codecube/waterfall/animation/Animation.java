@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Animation {
-	private int currentFrame = 0, duration = 1;
+	private int currentFrame = 0, duration = 1, timePerFrame = 20;
 	private AnimPropertySet propertySet;
 	private List<AnimationData> rawData = new ArrayList<>();
 
@@ -68,11 +68,31 @@ public class Animation {
 		}
 	}
 
+	public void offsetCurrentFrame(int delta) {
+		// +duration is to deal with negative deltas.
+		currentFrame = (currentFrame + delta + duration) % duration;
+		for (AnimatableProperty<?> property : propertySet.getProperties()) {
+			property.informListener();
+		}
+	}
+
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 
 	public int getDuration() {
 		return duration;
+	}
+
+	public void offsetDuration(int delta) {
+		duration = Math.max(duration + delta, 1);
+	}
+
+	public void setTimePerFrame(int timePerFrame) {
+		this.timePerFrame = timePerFrame;
+	}
+
+	public int getTimePerFrame() {
+		return timePerFrame;
 	}
 }

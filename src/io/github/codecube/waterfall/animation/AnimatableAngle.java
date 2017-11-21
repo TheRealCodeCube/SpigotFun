@@ -1,27 +1,27 @@
 package io.github.codecube.waterfall.animation;
 
-import org.bukkit.util.Vector;
+import org.bukkit.util.EulerAngle;
 
 import io.github.codecube.waterfall.toolbar.AnimValueOffsetHTIL;
 import io.github.codecube.waterfall.toolbar.HotbarToolbar;
 import io.github.codecube.waterfall.toolbar.HotbarToolbarItem;
 import io.github.codecube.waterfall.util.StoneHoeIcons;
 
-public class AnimatableVector extends AnimatableProperty<Vector> {
-	public AnimatableVector(AnimPropertySet parent) {
+public class AnimatableAngle extends AnimatableProperty<EulerAngle> {
+	public AnimatableAngle(AnimPropertySet parent) {
 		super(parent, 3);
 	}
 
 	@Override
-	public void set(int frame, Vector value) {
+	public void set(int frame, EulerAngle value) {
 		dataChannels[0].set(frame, value.getX());
 		dataChannels[1].set(frame, value.getY());
 		dataChannels[2].set(frame, value.getZ());
 	}
 
 	@Override
-	public Vector get(int frame) {
-		return new Vector(dataChannels[0].getValue(frame), dataChannels[1].getValue(frame),
+	public EulerAngle get(int frame) {
+		return new EulerAngle(dataChannels[0].getValue(frame), dataChannels[1].getValue(frame),
 				dataChannels[2].getValue(frame));
 	}
 
@@ -161,23 +161,25 @@ public class AnimatableVector extends AnimatableProperty<Vector> {
 	public HotbarToolbar createEditorToolbar() {
 		HotbarToolbar tr = super.createEditorToolbar();
 
-		HotbarToolbarItem translateX = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_X);
-		translateX.setName("Move X");
-		translateX.setDescription("left/right = +/-, sneak = small increments");
-		translateX.setListener(new AnimValueOffsetHTIL(this, dataChannels[0]));
-		tr.addItem(translateX);
+		final double bigStep = Math.PI / 4.0, smallStep = Math.PI / 32.0;
 
-		HotbarToolbarItem translateY = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_Y);
-		translateY.setName("Move Y");
-		translateY.setDescription("left/right = +/-, sneak = small increments");
-		translateY.setListener(new AnimValueOffsetHTIL(this, dataChannels[1]));
-		tr.addItem(translateY);
+		HotbarToolbarItem rotateX = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_X);
+		rotateX.setName("Rotate X");
+		rotateX.setDescription("left/right = +/-, sneak = small increments");
+		rotateX.setListener(new AnimValueOffsetHTIL(this, dataChannels[0], bigStep, smallStep));
+		tr.addItem(rotateX);
 
-		HotbarToolbarItem translateZ = new HotbarToolbarItem(StoneHoeIcons.ICON_MOVE_Z);
-		translateZ.setName("Move Z");
-		translateZ.setDescription("left/right = +/-, sneak = small increments");
-		translateZ.setListener(new AnimValueOffsetHTIL(this, dataChannels[2]));
-		tr.addItem(translateZ);
+		HotbarToolbarItem rotateY = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_Y);
+		rotateY.setName("Rotate Y");
+		rotateY.setDescription("left/right = +/-, sneak = small increments");
+		rotateY.setListener(new AnimValueOffsetHTIL(this, dataChannels[1], bigStep, smallStep));
+		tr.addItem(rotateY);
+
+		HotbarToolbarItem rotateZ = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_Z);
+		rotateZ.setName("Rotate Z");
+		rotateZ.setDescription("left/right = +/-, sneak = small increments");
+		rotateZ.setListener(new AnimValueOffsetHTIL(this, dataChannels[2], bigStep, smallStep));
+		tr.addItem(rotateZ);
 
 		return tr;
 	}

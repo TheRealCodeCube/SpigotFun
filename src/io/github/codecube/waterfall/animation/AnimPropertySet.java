@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnimPropertySet {
+	private boolean playing = false;
 	private List<AnimatableProperty<?>> properties = new ArrayList<>();
 	private Animation currentAnimation;
 
@@ -31,5 +32,13 @@ public class AnimPropertySet {
 	 */
 	public Animation createNewAnimation() {
 		return new Animation(this);
+	}
+
+	public boolean isPlaying() {
+		return playing;
+	}
+
+	public void setPlaying(boolean playing) {
+		this.playing = playing;
 	}
 }

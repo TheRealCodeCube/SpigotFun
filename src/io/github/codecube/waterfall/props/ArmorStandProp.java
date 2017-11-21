@@ -6,20 +6,74 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
+import io.github.codecube.waterfall.animation.AnimatableAngle;
+import io.github.codecube.waterfall.animation.AnimationListener;
 import io.github.codecube.waterfall.toolbar.HotbarToolbar;
 import io.github.codecube.waterfall.toolbar.HotbarToolbarItem;
 import io.github.codecube.waterfall.toolbar.OpenToolbarHTIL;
 import io.github.codecube.waterfall.toolbar.SimpleHTIL;
-import io.github.codecube.waterfall.toolbar.ValueOffsetHTIL;
 import io.github.codecube.waterfall.util.StoneHoeIcons;
 
 public class ArmorStandProp extends EntityProp {
 	private ArmorStand armorStand = null;
 	private boolean baseVisible = true, structureVisible = true, armsVisible = true, small = false;
 	private ItemStack head = null, chest = null, legs = null, feet = null, hand = null;
-	private EulerAngle leftArmPose = new EulerAngle(0, 0, 0), rightArmPose = new EulerAngle(0, 0, 0),
-			leftLegPose = new EulerAngle(0, 0, 0), rightLegPose = new EulerAngle(0, 0, 0),
-			headPose = new EulerAngle(0, 0, 0), bodyPose = new EulerAngle(0, 0, 0);
+	private AnimatableAngle leftArmPose = new AnimatableAngle(data), rightArmPose = new AnimatableAngle(data),
+			leftLegPose = new AnimatableAngle(data), rightLegPose = new AnimatableAngle(data),
+			headPose = new AnimatableAngle(data), bodyPose = new AnimatableAngle(data);
+
+	public ArmorStandProp() {
+		super();
+		setGravity(false);
+
+		headPose.setListener(new AnimationListener<EulerAngle>() {
+			@Override
+			public void onValueChange(EulerAngle newValue) {
+				if (armorStand != null)
+					armorStand.setHeadPose(newValue);
+			}
+		});
+
+		leftArmPose.setListener(new AnimationListener<EulerAngle>() {
+			@Override
+			public void onValueChange(EulerAngle newValue) {
+				if (armorStand != null)
+					armorStand.setLeftArmPose(newValue);
+			}
+		});
+
+		rightArmPose.setListener(new AnimationListener<EulerAngle>() {
+			@Override
+			public void onValueChange(EulerAngle newValue) {
+				if (armorStand != null)
+					armorStand.setRightArmPose(newValue);
+			}
+		});
+
+		leftLegPose.setListener(new AnimationListener<EulerAngle>() {
+			@Override
+			public void onValueChange(EulerAngle newValue) {
+				if (armorStand != null)
+					armorStand.setLeftLegPose(newValue);
+			}
+		});
+
+		rightLegPose.setListener(new AnimationListener<EulerAngle>() {
+			@Override
+			public void onValueChange(EulerAngle newValue) {
+				if (armorStand != null)
+					armorStand.setRightLegPose(newValue);
+			}
+		});
+
+		bodyPose.setListener(new AnimationListener<EulerAngle>() {
+			@Override
+			public void onValueChange(EulerAngle newValue) {
+				if (armorStand != null)
+					armorStand.setBodyPose(newValue);
+			}
+		});
+	}
 
 	@Override
 	public String getTypeName() {
@@ -31,151 +85,37 @@ public class ArmorStandProp extends EntityProp {
 		return StoneHoeIcons.ICON_ARMOR_STAND;
 	}
 
-	private interface PoseModifier {
-		public void setPose(EulerAngle pose);
-
-		public EulerAngle getPose();
-	}
-
-	public HotbarToolbar createPoseEditorToolbar(PoseModifier modifier) {
-		HotbarToolbar tr = new HotbarToolbar();
-
-		final double LARGE = Math.PI / 4.0, SMALL = Math.PI / 32.0;
-
-		HotbarToolbarItem rotateX = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_X);
-		rotateX.setName("Rotate X");
-		rotateX.setListener(new ValueOffsetHTIL(LARGE, SMALL) {
-			@Override
-			protected void offset(double delta) {
-				modifier.setPose(modifier.getPose().add(delta, 0.0, 0.0));
-			}
-		});
-		tr.addItem(rotateX);
-
-		HotbarToolbarItem rotateY = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_Y);
-		rotateY.setName("Rotate Y");
-		rotateY.setListener(new ValueOffsetHTIL(LARGE, SMALL) {
-			@Override
-			protected void offset(double delta) {
-				modifier.setPose(modifier.getPose().add(0.0, delta, 0.0));
-			}
-		});
-		tr.addItem(rotateY);
-
-		HotbarToolbarItem rotateZ = new HotbarToolbarItem(StoneHoeIcons.ICON_ROT_Z);
-		rotateZ.setName("Rotate Z");
-		rotateZ.setListener(new ValueOffsetHTIL(LARGE, SMALL) {
-			@Override
-			protected void offset(double delta) {
-				modifier.setPose(modifier.getPose().add(0.0, 0.0, delta));
-			}
-		});
-		tr.addItem(rotateZ);
-
-		HotbarToolbarItem reset = new HotbarToolbarItem(StoneHoeIcons.ICON_RESET);
-		reset.setName("Reset Pose");
-		reset.setListener(new SimpleHTIL() {
-			@Override
-			protected void onUse() {
-				modifier.setPose(new EulerAngle(0.0, 0.0, 0.0));
-			}
-		});
-		tr.addItem(reset);
-
-		return tr;
-	}
-
 	public HotbarToolbar createPoseToolbar() {
 		HotbarToolbar tr = new HotbarToolbar();
 
 		HotbarToolbarItem head = new HotbarToolbarItem(StoneHoeIcons.ICON_HEAD);
 		head.setName("Edit Head");
-		head.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
-			@Override
-			public void setPose(EulerAngle pose) {
-				setHeadPose(pose);
-			}
-
-			@Override
-			public EulerAngle getPose() {
-				return getHeadPose();
-			}
-		}), tr));
+		head.setListener(new OpenToolbarHTIL(headPose.createEditorToolbar(), tr));
 		tr.addItem(head);
 
 		HotbarToolbarItem rightArm = new HotbarToolbarItem(StoneHoeIcons.ICON_RIGHT_ARM);
 		rightArm.setName("Edit Right Arm");
-		rightArm.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
-			@Override
-			public void setPose(EulerAngle pose) {
-				setRightArmPose(pose);
-			}
-
-			@Override
-			public EulerAngle getPose() {
-				return getRightArmPose();
-			}
-		}), tr));
+		rightArm.setListener(new OpenToolbarHTIL(rightArmPose.createEditorToolbar(), tr));
 		tr.addItem(rightArm);
 
 		HotbarToolbarItem leftArm = new HotbarToolbarItem(StoneHoeIcons.ICON_LEFT_ARM);
 		leftArm.setName("Edit Left Arm");
-		leftArm.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
-			@Override
-			public void setPose(EulerAngle pose) {
-				setLeftArmPose(pose);
-			}
-
-			@Override
-			public EulerAngle getPose() {
-				return getLeftArmPose();
-			}
-		}), tr));
+		leftArm.setListener(new OpenToolbarHTIL(leftArmPose.createEditorToolbar(), tr));
 		tr.addItem(leftArm);
 
 		HotbarToolbarItem rightLeg = new HotbarToolbarItem(StoneHoeIcons.ICON_RIGHT_LEG);
 		rightLeg.setName("Edit Right Leg");
-		rightLeg.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
-			@Override
-			public void setPose(EulerAngle pose) {
-				setRightLegPose(pose);
-			}
-
-			@Override
-			public EulerAngle getPose() {
-				return getRightLegPose();
-			}
-		}), tr));
+		rightLeg.setListener(new OpenToolbarHTIL(rightLegPose.createEditorToolbar(), tr));
 		tr.addItem(rightLeg);
 
 		HotbarToolbarItem leftLeg = new HotbarToolbarItem(StoneHoeIcons.ICON_LEFT_LEG);
 		leftLeg.setName("Edit Left Leg");
-		leftLeg.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
-			@Override
-			public void setPose(EulerAngle pose) {
-				setLeftLegPose(pose);
-			}
-
-			@Override
-			public EulerAngle getPose() {
-				return getLeftLegPose();
-			}
-		}), tr));
+		leftLeg.setListener(new OpenToolbarHTIL(leftLegPose.createEditorToolbar(), tr));
 		tr.addItem(leftLeg);
 
 		HotbarToolbarItem body = new HotbarToolbarItem(StoneHoeIcons.ICON_BODY);
 		body.setName("Edit Body");
-		body.setListener(new OpenToolbarHTIL(createPoseEditorToolbar(new PoseModifier() {
-			@Override
-			public void setPose(EulerAngle pose) {
-				setBodyPose(pose);
-			}
-
-			@Override
-			public EulerAngle getPose() {
-				return getBodyPose();
-			}
-		}), tr));
+		body.setListener(new OpenToolbarHTIL(bodyPose.createEditorToolbar(), tr));
 		tr.addItem(body);
 
 		return tr;
@@ -228,11 +168,6 @@ public class ArmorStandProp extends EntityProp {
 		tr.addItem(gotoPose);
 
 		return tr;
-	}
-
-	public ArmorStandProp() {
-		super();
-		setGravity(false);
 	}
 
 	public boolean isBaseVisible() {
@@ -357,78 +292,78 @@ public class ArmorStandProp extends EntityProp {
 
 	public EulerAngle getLeftArmPose() {
 		if (armorStand == null)
-			return leftArmPose;
+			return leftArmPose.get();
 		else
 			return armorStand.getLeftArmPose();
 	}
 
 	public void setLeftArmPose(EulerAngle leftArmPose) {
-		this.leftArmPose = leftArmPose;
+		this.leftArmPose.set(leftArmPose);
 		if (armorStand != null)
 			armorStand.setLeftArmPose(leftArmPose);
 	}
 
 	public EulerAngle getRightArmPose() {
 		if (armorStand == null)
-			return rightArmPose;
+			return rightArmPose.get();
 		else
 			return armorStand.getRightArmPose();
 	}
 
 	public void setRightArmPose(EulerAngle rightArmPose) {
-		this.rightArmPose = rightArmPose;
+		this.rightArmPose.set(rightArmPose);
 		if (armorStand != null)
 			armorStand.setRightArmPose(rightArmPose);
 	}
 
 	public EulerAngle getLeftLegPose() {
 		if (armorStand == null)
-			return leftLegPose;
+			return leftLegPose.get();
 		else
 			return armorStand.getLeftLegPose();
 	}
 
 	public void setLeftLegPose(EulerAngle leftLegPose) {
-		this.leftLegPose = leftLegPose;
+		this.leftLegPose.set(leftLegPose);
 		if (armorStand != null)
 			armorStand.setLeftLegPose(leftLegPose);
 	}
 
 	public EulerAngle getRightLegPose() {
 		if (armorStand == null)
-			return rightLegPose;
+			return rightLegPose.get();
 		else
 			return armorStand.getRightLegPose();
 	}
 
 	public void setRightLegPose(EulerAngle rightLegPose) {
-		this.rightLegPose = rightLegPose;
+		this.rightLegPose.set(rightLegPose);
 		if (armorStand != null)
 			armorStand.setRightLegPose(rightLegPose);
 	}
 
 	public EulerAngle getHeadPose() {
 		if (armorStand == null)
-			return headPose;
+			return headPose.get();
 		else
 			return armorStand.getHeadPose();
 	}
 
 	public void setHeadPose(EulerAngle headPose) {
-		this.headPose = headPose;
+		this.headPose.set(headPose);
 		if (armorStand != null)
 			armorStand.setHeadPose(headPose);
 	}
 
 	public EulerAngle getBodyPose() {
 		if (armorStand == null)
-			return bodyPose;
+			return bodyPose.get();
 		else
 			return armorStand.getBodyPose();
 	}
 
 	public void setBodyPose(EulerAngle bodyPose) {
-		this.bodyPose = bodyPose;
+		this.bodyPose.set(bodyPose);
 		if (armorStand != null)
 			armorStand.setBodyPose(bodyPose);
 	}
@@ -443,17 +378,17 @@ public class ArmorStandProp extends EntityProp {
 		armorStand = (ArmorStand) spawned;
 		armorStand.setArms(armsVisible);
 		armorStand.setBasePlate(baseVisible);
-		armorStand.setBodyPose(bodyPose);
+		armorStand.setBodyPose(bodyPose.get());
 		armorStand.setBoots(feet);
 		armorStand.setChestplate(chest);
-		armorStand.setHeadPose(headPose);
+		armorStand.setHeadPose(headPose.get());
 		armorStand.setHelmet(head);
 		armorStand.setItemInHand(hand);
-		armorStand.setLeftArmPose(leftArmPose);
-		armorStand.setLeftLegPose(leftLegPose);
+		armorStand.setLeftArmPose(leftArmPose.get());
+		armorStand.setLeftLegPose(leftLegPose.get());
 		armorStand.setMarker(!structureVisible); // Makes it so that when it glows, the structure does not glow too.
-		armorStand.setRightArmPose(rightArmPose);
-		armorStand.setRightLegPose(rightLegPose);
+		armorStand.setRightArmPose(rightArmPose.get());
+		armorStand.setRightLegPose(rightLegPose.get());
 		armorStand.setSmall(small);
 		armorStand.setVisible(structureVisible);
 		return armorStand;
@@ -463,16 +398,16 @@ public class ArmorStandProp extends EntityProp {
 	protected void onDestroyEntity() {
 		armsVisible = armorStand.hasArms();
 		baseVisible = armorStand.hasBasePlate();
-		bodyPose = armorStand.getBodyPose();
+		bodyPose.set(armorStand.getBodyPose());
 		feet = armorStand.getBoots();
 		chest = armorStand.getChestplate();
-		headPose = armorStand.getHeadPose();
+		headPose.set(armorStand.getHeadPose());
 		head = armorStand.getHelmet();
 		hand = armorStand.getItemInHand();
-		leftArmPose = armorStand.getLeftArmPose();
-		leftLegPose = armorStand.getLeftLegPose();
-		rightArmPose = armorStand.getRightArmPose();
-		rightLegPose = armorStand.getRightLegPose();
+		leftArmPose.set(armorStand.getLeftArmPose());
+		leftLegPose.set(armorStand.getLeftLegPose());
+		rightArmPose.set(armorStand.getRightArmPose());
+		rightLegPose.set(armorStand.getRightLegPose());
 		small = armorStand.isSmall();
 		structureVisible = armorStand.isVisible();
 	}
