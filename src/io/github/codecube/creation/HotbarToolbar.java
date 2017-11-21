@@ -73,8 +73,6 @@ public class HotbarToolbar {
 
 	public void addItem(HotbarToolbarItem item) {
 		for (int i = 0; i < 9; i++) {
-			System.out.print(i);
-			System.out.println(items[i] == null);
 			if (items[i] == null) {
 				item.setSlot(i);
 				item.setParent(this);

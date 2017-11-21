@@ -18,12 +18,35 @@ import io.github.codecube.util.StoneHoeIcons;
 
 public class Prop {
 	private World world = null;
-	private Vector position = new Vector(0, 0, 0);
+	private AnimPropertySet data = new AnimPropertySet();
+	private AnimatableVector position = new AnimatableVector(data);
 	protected Location worldPosition = null;
 	private List<Prop> children = new ArrayList<>();
 	private Prop parent = null;
 	private boolean placed = false;
 	private String name = "unnamed";
+
+	public Prop() {
+		Animation defaultAnimation = data.createNewAnimation();
+		data.setCurrentAnimation(defaultAnimation);
+
+		position.setListener(new AnimationListener<Vector>() {
+			@Override
+			public void onValueChange(Vector newValue) {
+				if (parent == null) {
+					worldPosition.setX(newValue.getX());
+					worldPosition.setY(newValue.getY());
+					worldPosition.setZ(newValue.getZ());
+				} else {
+					Vector parentPos = parent.getRealPosition();
+					worldPosition.setX(newValue.getX() + parentPos.getX());
+					worldPosition.setY(newValue.getY() + parentPos.getY());
+					worldPosition.setZ(newValue.getZ() + parentPos.getZ());
+				}
+				onPositionChange();
+			}
+		});
+	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -106,7 +129,7 @@ public class Prop {
 		});
 		tr.addItem(translateZ);
 
-		return tr;
+		return position.createEditorToolbar();
 	}
 
 	public HotbarToolbar createToolbar() {
@@ -126,29 +149,31 @@ public class Prop {
 	}
 
 	public void setPosition(Vector newPosition) {
-		offsetPosition(newPosition.subtract(position));
-	}
-
-	public void offsetPosition(Vector delta) {
-		position = position.add(delta);
+		Vector delta = newPosition.subtract(position.get());
+		position.set(newPosition);
 		if (placed) {
 			worldPosition = worldPosition.add(delta);
 			onPositionChange();
-			for (Prop child : children) {
-				child.offsetPosition(delta);
-			}
+		}
+	}
+
+	public void offsetPosition(Vector delta) {
+		position.set(position.get().add(delta));
+		if (placed) {
+			worldPosition = worldPosition.add(delta);
+			onPositionChange();
 		}
 	}
 
 	public Vector getPosition() {
-		return position;
+		return position.get();
 	}
 
 	public Vector getRealPosition() {
 		if (parent == null) {
-			return position;
+			return position.get();
 		} else {
-			return position.add(parent.getRealPosition());
+			return position.get().add(parent.getRealPosition());
 		}
 	}
 
