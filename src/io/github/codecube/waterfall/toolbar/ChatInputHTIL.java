@@ -6,7 +6,6 @@ import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 import io.github.codecube.waterfall.core.WaterfallPlugin;
@@ -23,7 +22,7 @@ public abstract class ChatInputHTIL extends HotbarToolbarItemListener {
 	}
 
 	@Override
-	public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+	public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 		Prompt donePrompt = new MessagePrompt() {
 			@Override
 			public String getPromptText(ConversationContext context) {
@@ -58,9 +57,10 @@ public abstract class ChatInputHTIL extends HotbarToolbarItemListener {
 		return null;
 	}
 
-	public String getPrompt(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+	public String getPrompt(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 		return defaultPrompt;
 	}
 
-	public abstract void onInput(HotbarToolbarItem used, Player user, Action action, boolean sneaking, String input);
+	public abstract void onInput(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking,
+			String input);
 }

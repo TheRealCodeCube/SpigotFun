@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 
 public class HotbarToolbar {
 	private static Map<Player, HotbarToolbar> toolbars = new HashMap<>();
@@ -27,11 +26,15 @@ public class HotbarToolbar {
 		}
 	}
 
-	public static boolean use(Player user, int slot, Action action) {
+	public static boolean use(Player user, int slot, HTIUseMode action) {
 		if (toolbars.containsKey(user)) {
 			return toolbars.get(user).use(slot, action);
 		}
 		return false;
+	}
+
+	public static boolean canUse(Player user, int slot) {
+		return toolbars.containsKey(user) && toolbars.get(user).canUse(slot);
 	}
 
 	public static void updateAll() {
@@ -111,10 +114,14 @@ public class HotbarToolbar {
 		}
 	}
 
-	public boolean use(int slot, Action action) {
+	public boolean use(int slot, HTIUseMode action) {
 		if (items[slot] != null) {
 			return items[slot].use(action);
 		}
 		return false;
+	}
+
+	public boolean canUse(int slot) {
+		return items[slot] != null;
 	}
 }

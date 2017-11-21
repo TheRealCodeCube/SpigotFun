@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.util.Vector;
 
 import io.github.codecube.waterfall.animation.AnimPropertySet;
@@ -14,6 +13,7 @@ import io.github.codecube.waterfall.animation.AnimatableVector;
 import io.github.codecube.waterfall.animation.Animation;
 import io.github.codecube.waterfall.animation.AnimationListener;
 import io.github.codecube.waterfall.toolbar.ChatInputHTIL;
+import io.github.codecube.waterfall.toolbar.HTIUseMode;
 import io.github.codecube.waterfall.toolbar.HotbarToolbar;
 import io.github.codecube.waterfall.toolbar.HotbarToolbarItem;
 import io.github.codecube.waterfall.toolbar.OpenToolbarHTIL;
@@ -87,7 +87,8 @@ public class Prop {
 		rename.setName("Rename (Currently " + getName() + ")");
 		rename.setListener(new ChatInputHTIL("What should the prop's name be?") {
 			@Override
-			public void onInput(HotbarToolbarItem used, Player user, Action action, boolean sneaking, String input) {
+			public void onInput(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking,
+					String input) {
 				setName(input);
 				used.setName("Rename (Currently " + getName() + ")");
 			}

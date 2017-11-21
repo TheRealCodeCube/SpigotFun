@@ -1,7 +1,6 @@
 package io.github.codecube.waterfall.toolbar;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 
 import io.github.codecube.waterfall.util.StoneHoeIcons;
 
@@ -22,7 +21,7 @@ public class OpenToolbarHTIL extends HotbarToolbarItemListener {
 	}
 
 	@Override
-	public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+	public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 		HotbarToolbar.showToolbar(toOpen, user);
 		return true;
 	}

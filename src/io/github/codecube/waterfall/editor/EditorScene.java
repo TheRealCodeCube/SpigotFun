@@ -6,13 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import io.github.codecube.waterfall.props.ArmorStandProp;
 import io.github.codecube.waterfall.props.Prop;
 import io.github.codecube.waterfall.scene.Scene;
+import io.github.codecube.waterfall.toolbar.HTIUseMode;
 import io.github.codecube.waterfall.toolbar.HotbarToolbar;
 import io.github.codecube.waterfall.toolbar.HotbarToolbarItem;
 import io.github.codecube.waterfall.toolbar.HotbarToolbarItemListener;
@@ -42,7 +42,7 @@ public class EditorScene extends Scene {
 				creator.setName("Create New " + example.getTypeName());
 				creator.setListener(new HotbarToolbarItemListener() {
 					@Override
-					public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+					public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 						try {
 							Prop newProp = example.getClass().newInstance();
 							newProp.setPosition(user.getLocation().add(1.0, 0.0, 0.0).toVector());
@@ -50,7 +50,7 @@ public class EditorScene extends Scene {
 						} catch (InstantiationException | IllegalAccessException e) {
 							e.printStackTrace();
 						}
-						return false;
+						return true;
 					}
 				});
 				tr.addItem(creator);
@@ -73,7 +73,7 @@ public class EditorScene extends Scene {
 		}
 
 		@Override
-		public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+		public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 			HotbarToolbar toShow = toEdit.createToolbar();
 			toShow.offsetItems();
 			HotbarToolbarItem back = new HotbarToolbarItem(StoneHoeIcons.ICON_BACK_NAV);
@@ -98,7 +98,7 @@ public class EditorScene extends Scene {
 		}
 
 		@Override
-		public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+		public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 			final int SEARCH_SIZE = 10, SEARCH_SIZE_2 = SEARCH_SIZE * 2;
 			Vector center = user.getLocation().toVector();
 			final double minx = center.getX() - SEARCH_SIZE, miny = center.getY() - SEARCH_SIZE,

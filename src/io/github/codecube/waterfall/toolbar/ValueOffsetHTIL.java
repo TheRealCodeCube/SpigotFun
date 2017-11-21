@@ -1,7 +1,6 @@
 package io.github.codecube.waterfall.toolbar;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 
 public abstract class ValueOffsetHTIL extends HotbarToolbarItemListener {
 	private double largeAmount = 1.0, smallAmount = 0.1;
@@ -16,9 +15,12 @@ public abstract class ValueOffsetHTIL extends HotbarToolbarItemListener {
 	}
 
 	@Override
-	public boolean onUse(HotbarToolbarItem used, Player user, Action action, boolean sneaking) {
+	public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
 		double value = (sneaking) ? smallAmount : largeAmount;
-		value = ((action == Action.LEFT_CLICK_AIR) || (action == Action.LEFT_CLICK_BLOCK)) ? value : -value;
+		if (action == HTIUseMode.RIGHT_CLICK)
+			value = -value;
+		else if (action != HTIUseMode.LEFT_CLICK) // LClick is positive.
+			value = 0.0;
 		offset(value);
 		return true;
 	}

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -71,8 +70,8 @@ public class HotbarToolbarItem {
 	 * This version does word wrapping.
 	 * 
 	 * @param description
-	 *            A string that will be word-wrapped and set as the lore for this
-	 *            item's appearence.
+	 *        A string that will be word-wrapped and set as the lore for this item's
+	 *        appearence.
 	 */
 	public void setDescription(String description) {
 		String[] words = description.split(" ");
@@ -123,7 +122,7 @@ public class HotbarToolbarItem {
 		updateInternal(holder);
 	}
 
-	public boolean use(Action action) {
+	public boolean use(HTIUseMode action) {
 		if ((this.listener == null) || (this.parent == null))
 			return false;
 		Player user = parent.getUser();
