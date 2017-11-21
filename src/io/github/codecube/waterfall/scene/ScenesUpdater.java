@@ -3,11 +3,14 @@ package io.github.codecube.waterfall.scene;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.github.codecube.waterfall.animation.AnimPropertySet;
+
 public class ScenesUpdater {
 	private static final TimerTask task = new TimerTask() {
 		@Override
 		public void run() {
 			Scene.updateAllScenes();
+			AnimPropertySet.updateAllAnimations();
 		}
 	};
 	private static Timer timer = null;

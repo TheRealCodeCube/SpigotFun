@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Animation {
-	private int currentFrame = 0, duration = 1, timePerFrame = 20;
+	private int currentFrame = 0, duration = 1, timePerFrame = 4;
 	private AnimPropertySet propertySet;
 	private List<AnimationData> rawData = new ArrayList<>();
 

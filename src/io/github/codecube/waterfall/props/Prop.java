@@ -16,7 +16,9 @@ import io.github.codecube.waterfall.toolbar.ChatInputHTIL;
 import io.github.codecube.waterfall.toolbar.HTIUseMode;
 import io.github.codecube.waterfall.toolbar.HotbarToolbar;
 import io.github.codecube.waterfall.toolbar.HotbarToolbarItem;
+import io.github.codecube.waterfall.toolbar.HotbarToolbarItemListener;
 import io.github.codecube.waterfall.toolbar.OpenToolbarHTIL;
+import io.github.codecube.waterfall.toolbar.SimpleHTIL;
 import io.github.codecube.waterfall.toolbar.ValueOffsetHTIL;
 import io.github.codecube.waterfall.util.StoneHoeIcons;
 
@@ -70,11 +72,48 @@ public class Prop {
 		return StoneHoeIcons.ICON_GENERIC;
 	}
 
+	private static final StoneHoeIcons[] FRAMERATE_ICONS = { StoneHoeIcons.ICON_FPS_1, StoneHoeIcons.ICON_FPS_2,
+			StoneHoeIcons.ICON_FPS_5, StoneHoeIcons.ICON_FPS_10, StoneHoeIcons.ICON_FPS_20 };
+	private static final int[] FRAMERATE_VALUES = { 20, 10, 4, 2, 1 };
+
+	private HotbarToolbar createFramerateToolbar() {
+		HotbarToolbar tr = new HotbarToolbar();
+
+		for (int i = 0; i < FRAMERATE_VALUES.length; i++) {
+			final int j = i;
+			HotbarToolbarItem selector = new HotbarToolbarItem(FRAMERATE_ICONS[i]);
+			selector.setName("Set Framerate To " + (int) (20.0 / FRAMERATE_VALUES[i]) + "FPS");
+			selector.setListener(new SimpleHTIL() {
+				@Override
+				protected void onUse() {
+					data.getCurrentAnimation().setTimePerFrame(FRAMERATE_VALUES[j]);
+				}
+			});
+			tr.addItem(selector);
+		}
+
+		return tr;
+	}
+
 	protected HotbarToolbar createAnimationToolbar() {
 		HotbarToolbar tr = new HotbarToolbar();
 
 		HotbarToolbarItem pausePlay = new HotbarToolbarItem(StoneHoeIcons.ICON_PLAY);
 		pausePlay.setName("Play");
+		pausePlay.setListener(new HotbarToolbarItemListener() {
+			@Override
+			public boolean onUse(HotbarToolbarItem used, Player user, HTIUseMode action, boolean sneaking) {
+				data.setPlaying(!data.isPlaying());
+				if (data.isPlaying()) {
+					pausePlay.setAppearence(StoneHoeIcons.createIcon(StoneHoeIcons.ICON_PAUSE));
+					pausePlay.setName("Pause");
+				} else {
+					pausePlay.setAppearence(StoneHoeIcons.createIcon(StoneHoeIcons.ICON_PLAY));
+					pausePlay.setName("Play");
+				}
+				return true;
+			}
+		});
 		tr.addItem(pausePlay);
 
 		HotbarToolbarItem seek = new HotbarToolbarItem(StoneHoeIcons.ICON_SEEK);
@@ -112,6 +151,11 @@ public class Prop {
 			}
 		});
 		tr.addItem(changeRange);
+
+		HotbarToolbarItem changeFramerate = new HotbarToolbarItem(StoneHoeIcons.ICON_FRAMERATE);
+		changeFramerate.setName("Change Framerate");
+		changeFramerate.setListener(new OpenToolbarHTIL(createFramerateToolbar(), tr));
+		tr.addItem(changeFramerate);
 
 		return tr;
 	}
