@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import io.github.codecube.waterfall.core.WaterfallPlugin;
 
-public abstract class ChatInputHTIL implements HotbarToolbarItemListener {
+public abstract class ChatInputHTIL extends HotbarToolbarItemListener {
 	private String defaultPrompt = "Enter some text";
 
 	public ChatInputHTIL() {

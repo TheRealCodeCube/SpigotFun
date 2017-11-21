@@ -2,9 +2,8 @@ package io.github.codecube.waterfall.toolbar;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.inventory.ItemStack;
 
-public abstract class ValueOffsetHTIL implements HotbarToolbarItemListener {
+public abstract class ValueOffsetHTIL extends HotbarToolbarItemListener {
 	private double largeAmount = 1.0, smallAmount = 0.1;
 
 	public ValueOffsetHTIL() {
@@ -22,11 +21,6 @@ public abstract class ValueOffsetHTIL implements HotbarToolbarItemListener {
 		value = ((action == Action.LEFT_CLICK_AIR) || (action == Action.LEFT_CLICK_BLOCK)) ? value : -value;
 		offset(value);
 		return true;
-	}
-
-	@Override
-	public ItemStack onUpdate(HotbarToolbarItem used, Player holder, boolean sneaking) {
-		return null;
 	}
 
 	protected abstract void offset(double delta);

@@ -52,11 +52,6 @@ public class EditorScene extends Scene {
 						}
 						return false;
 					}
-
-					@Override
-					public ItemStack onUpdate(HotbarToolbarItem used, Player holder, boolean sneaking) {
-						return null;
-					}
 				});
 				tr.addItem(creator);
 			}
@@ -68,7 +63,7 @@ public class EditorScene extends Scene {
 		return tr;
 	}
 
-	private class SelectPropHTIL implements HotbarToolbarItemListener {
+	private class SelectPropHTIL extends HotbarToolbarItemListener {
 		private HotbarToolbar root;
 		private Prop toEdit;
 
@@ -95,7 +90,7 @@ public class EditorScene extends Scene {
 		}
 	}
 
-	private class OpenPropSelectorHTIL implements HotbarToolbarItemListener {
+	private class OpenPropSelectorHTIL extends HotbarToolbarItemListener {
 		private HotbarToolbar root;
 
 		public OpenPropSelectorHTIL(HotbarToolbar root) {
@@ -136,11 +131,6 @@ public class EditorScene extends Scene {
 			}
 			HotbarToolbar.showToolbar(nearbyPropSelector, user);
 			return true;
-		}
-
-		@Override
-		public ItemStack onUpdate(HotbarToolbarItem used, Player holder, boolean sneaking) {
-			return null;
 		}
 	}
 
